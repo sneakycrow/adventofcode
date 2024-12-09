@@ -1,0 +1,10 @@
+# Generated documentation
+/docs/
+
+# Various IDE and editor files
+.vscode/
+.idea/
+.zed/
+*.swp
+*.swo
+.DS_Store

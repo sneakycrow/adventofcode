@@ -1,0 +1,19 @@
+zig-cache/
+zig-out/
+release/
+debug/
+build/
+build-*/
+
+# Binaries and executables
+*.exe
+*.pdb
+*.obj
+*.o
+*.a
+*.so
+*.dll
+*.dylib
+
+# Test artifacts
+/test/tmp/
