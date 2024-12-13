@@ -1,6 +1,9 @@
 const std = @import("std");
 
+const input = @embedFile("data/01.txt");
 pub fn main() !void {
+    std.debug.print("Calculating answer for Advent of Code 2024 - Day 01\n", .{});
+    std.debug.print("Using data embedded in binary\n", .{});
     // First setup an allocator
     // We don't know what the size of the file will be
     // We need an allocator to make sure we're not using too
@@ -13,15 +16,7 @@ pub fn main() !void {
     // This gives us the actual interface for us to do memory management
     // We'll use this to read the file into memory
     const allocator = gpa.allocator();
-    // We're going to open the file first, this is not reading it yet, just opening
-    const filePath = try getDataPath(allocator, "01.txt");
-    defer allocator.free(filePath);
-    const file = try std.fs.cwd().openFile(filePath, .{});
-    defer file.close();
-    // Now read the contents of the file into memory
-    // std.math.maxInt(usize) sets the maximum integer to a usize, which is a pointer in the system (basically)
-    const content = try file.readToEndAlloc(allocator, std.math.maxInt(usize));
-    defer allocator.free(content);
+
     // Parse the contents into two columns
     // Initialize empty columns
     var column1 = Column{ .numbers = std.ArrayList(i64).init(allocator) };
@@ -29,7 +24,7 @@ pub fn main() !void {
     defer column1.numbers.deinit();
     defer column2.numbers.deinit();
     // Split the content by each newline character
-    var lines = std.mem.splitScalar(u8, content, '\n');
+    var lines = std.mem.splitScalar(u8, input, '\n');
     // Loop through the lines to split the two columns
     while (lines.next()) |line| {
         if (line.len == 0) continue; // Skip empty lines
@@ -56,7 +51,8 @@ pub fn main() !void {
         const diff = @abs(column2.numbers.items[i] - column1.numbers.items[i]);
         total_difference += diff;
     }
-    std.debug.print("Total differences: {d}\n", .{total_difference});
+    std.debug.print("Answer: {d}\n", .{total_difference});
+    std.debug.print("Also, fuck you Ian\n", .{});
 }
 
 /// getDataPath will construct the path and check if we have access
