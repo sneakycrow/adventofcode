@@ -36,6 +36,15 @@ pub fn build(b: *std.Build) void {
         .optimize = optimize,
     });
 
+    // Add day01 executable
+    const exe_day01 = b.addExecutable(.{
+        .name = "day01",
+        .root_source_file = b.path("src/01.zig"),
+        .target = target,
+        .optimize = optimize,
+    });
+    b.installArtifact(exe_day01);
+
     // This declares intent for the executable to be installed into the
     // standard location when the user invokes the "install" step (the default
     // step when running `zig build`).
