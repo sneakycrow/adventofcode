@@ -3,11 +3,18 @@ const std = @import("std");
 const input_data = @embedFile("data.txt");
 
 pub fn main() !void {
-    std.debug.print("Input data:\n{s}\n", .{input_data});
-
     var lines = std.mem.splitScalar(u8, input_data, '\n');
+    var index: usize = 1;
     while (lines.next()) |line| {
-        if (line.len == 0) continue;
-        std.debug.print("Processing line: {s}\n", .{line});
+        if (line.len == 0) {
+            index += 1;
+            continue;
+        } else {
+            std.io.getStdOut().writer().print("{}: {s}\n", .{ index, line }) catch |err| switch (err) {
+                error.BrokenPipe => return,
+                else => return err,
+            };
+            index += 1;
+        }
     }
 }
