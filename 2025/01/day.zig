@@ -20,18 +20,35 @@ pub fn main() !void {
             const number_str = line[1..];
             const number = try std.fmt.parseInt(isize, number_str, 10);
 
-            // Adjust the dial position appropriately
-            dial_position += polarity * number;
+            // Calculate how many times we encounter zero during this movement
+            const old_position = dial_position;
+            const movement = polarity * number;
 
-            // Wrap the dial position to stay within 0-99 range
-            dial_position = @mod(dial_position, 100);
-            if (dial_position < 0) {
-                dial_position += 100;
+            // Count zero encounters by simulating the movement step by step
+            var current_pos = old_position;
+            const step: isize = if (movement > 0) 1 else -1;
+            var remaining_steps = @abs(movement);
+
+            while (remaining_steps > 0) {
+                current_pos += step;
+
+                // Handle wrapping
+                if (current_pos >= 100) {
+                    current_pos = 0;
+                } else if (current_pos < 0) {
+                    current_pos = 99;
+                }
+
+                // Count if we hit zero
+                if (current_pos == 0) {
+                    zero_positions += 1;
+                }
+
+                remaining_steps -= 1;
             }
 
-            if (dial_position == 0) {
-                zero_positions += 1;
-            }
+            // Update dial position to final position
+            dial_position = current_pos;
         }
     }
 
